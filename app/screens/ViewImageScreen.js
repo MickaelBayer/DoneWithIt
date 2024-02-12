@@ -8,20 +8,22 @@ import {
   View
 } from 'react-native';
 
-import colors from '../config/colors';
-
-const image = require('../assets/background.jpg');
+import defaultStyle from '../config/styles';
 
 export default function ViewImageScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.closeIcon}>
-        <MaterialCommunityIcons name="close" color={colors.white} size={35} />
+        <MaterialCommunityIcons
+          name="close"
+          color={defaultStyle.colors.white}
+          size={35}
+        />
       </View>
       <View style={styles.deleteIcon}>
         <MaterialCommunityIcons
           name="trash-can-outline"
-          color={colors.white}
+          color={defaultStyle.colors.white}
           size={35}
         />
       </View>
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.black,
+    backgroundColor: defaultStyle.colors.black,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
   },
   deleteIcon: {

@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   FlatList,
@@ -15,7 +15,9 @@ import PickerItem from './PickerItem';
 export default function AppPicker({
   icon,
   items,
+  numColumns = 1,
   onSelectItem,
+  PickerItemComponent = PickerItem,
   placeholder,
   selectedItem
 }) {
@@ -32,9 +34,11 @@ export default function AppPicker({
               style={styles.icon}
             />
           )}
-          <AppText style={styles.text}>
-            {selectedItem ? selectedItem.label : placeholder}
-          </AppText>
+          {selectedItem ? (
+            <AppText style={styles.text}>{selectedItem.label}</AppText>
+          ) : (
+            <AppText style={styles.placeholder}>{placeholder}</AppText>
+          )}
           <MaterialCommunityIcons
             name="chevron-down"
             size={20}
@@ -45,10 +49,12 @@ export default function AppPicker({
       <Modal visible={modalVisible} animationType="slide">
         <Button title="Close" onPress={() => setModalVisible(false)} />
         <FlatList
+          numColumns={numColumns}
           data={items}
           keyExtractor={(item) => item.value.toString()}
           renderItem={({ item }) => (
-            <PickerItem
+            <PickerItemComponent
+              item={item}
               label={item.label}
               onPress={() => {
                 onSelectItem(item);
@@ -75,7 +81,12 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 10
   },
+  placeholder: {
+    flex: 1,
+    color: defaultStyles.colors.medium
+  },
   text: {
-    flex: 1
+    flex: 1,
+    color: defaultStyles.colors.dark
   }
 });
