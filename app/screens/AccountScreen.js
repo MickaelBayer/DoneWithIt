@@ -3,6 +3,7 @@ import AppIcon from '../components/AppIcon';
 import Screen from '../components/Screen';
 import { ListItem, ListItemSeparator } from '../components/lists';
 import defaultStyles from '../config/styles';
+import routes from '../navigation/routes';
 
 const menuItems = [
   {
@@ -17,11 +18,12 @@ const menuItems = [
     icon: {
       name: 'email',
       backgroundColor: defaultStyles.colors.secondary
-    }
+    },
+    targerScreen: routes.MESSAGES
   }
 ];
 
-export default function AccountScreen() {
+export default function AccountScreen({ navigation }) {
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
@@ -45,6 +47,8 @@ export default function AccountScreen() {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
+              onPress={() => navigation.navigate(item.targerScreen)}
+              showChevrons
             />
           )}
           ItemSeparatorComponent={ListItemSeparator}

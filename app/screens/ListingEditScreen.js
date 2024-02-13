@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 import * as Yup from 'yup';
 
+import { useEffect, useState } from 'react';
+import categoriesApi from '../api/categories';
+import listingsApi from '../api/listings';
 import CategoryPickerItem from '../components/CategoryPickerItem';
 import Screen from '../components/Screen';
 import {
@@ -10,79 +13,51 @@ import {
   SubmitButton
 } from '../components/forms';
 import AppFormImagePicker from '../components/forms/AppFormImagePicker';
+import useApi from '../hooks/useApi';
 import useLocation from '../hooks/useLocation';
+import UploadScreen from './UploadScreen';
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label('Title'),
   price: Yup.number().required().min(1).max(10000).label('Price'),
   description: Yup.string().label('Description'),
-  category: Yup.object().required().nullable().label('Cateory'),
+  category: Yup.object().required().label('Cateory'),
   images: Yup.array().min(1, 'Please select at least one image.')
 });
 
-const categories = [
-  {
-    label: 'Furniture',
-    icon: 'floor-lamp',
-    size: 70,
-    color: '#fff',
-    backgroundColor: '#fc5c65',
-    value: 1
-  },
-  {
-    label: 'Clothing',
-    icon: 'shoe-heel',
-    size: 70,
-    color: '#fff',
-    backgroundColor: '#2bcbba',
-    value: 2
-  },
-  {
-    label: 'Camera',
-    icon: 'camera',
-    size: 70,
-    color: '#fff',
-    backgroundColor: '#fed330',
-    value: 3
-  },
-  {
-    label: 'Cars',
-    icon: 'car',
-    size: 70,
-    color: '#fff',
-    backgroundColor: '#fd9644',
-    value: 4
-  },
-  {
-    label: 'Games',
-    icon: 'cards',
-    size: 70,
-    color: '#fff',
-    backgroundColor: '#26de81',
-    value: 5
-  },
-  {
-    label: 'Sports',
-    icon: 'basketball',
-    size: 70,
-    color: '#fff',
-    backgroundColor: '#45aaf2',
-    value: 6
-  },
-  {
-    label: 'Movies & Music',
-    icon: 'headphones',
-    size: 70,
-    color: '#fff',
-    backgroundColor: '#4b7bec',
-    value: 7
-  }
-];
-
 export default function ListingEditScreen() {
   const location = useLocation();
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const getCategoriesApi = useApi(categoriesApi.getCategories);
+  useEffect(() => {
+    getCategoriesApi.request();
+  }, []);
+  const categories = getCategoriesApi.data;
+
+  const handleSubmit = async (listing, { resetForm }) => {
+    setProgress(0);
+    setUploadVisible(true);
+    const result = await listingsApi.postListing(
+      { ...listing, location },
+      (progress) => setProgress(progress)
+    );
+
+    if (!result.ok) {
+      setUploadVisible(false);
+      return alert('Could not save the listing.');
+    }
+
+    resetForm();
+  };
+
   return (
     <Screen style={styles.screen}>
+      <UploadScreen
+        onDone={() => setUploadVisible(false)}
+        progress={progress}
+        visible={uploadVisible}
+      />
       <AppForm
         initialValues={{
           title: '',
@@ -91,7 +66,7 @@ export default function ListingEditScreen() {
           category: null,
           images: []
         }}
-        onSubmit={(values) => console.log(values, location)}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
         <AppFormImagePicker name="images" style={{ marginBottom: 20 }} />

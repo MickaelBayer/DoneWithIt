@@ -11,7 +11,6 @@ export default function AppFormPicker({
   placeholder
 }) {
   const { errors, setFieldValue, touched, values } = useFormikContext();
-
   return (
     <>
       <AppPicker

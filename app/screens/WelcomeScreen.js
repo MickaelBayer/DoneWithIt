@@ -1,10 +1,13 @@
+import { useNavigation } from '@react-navigation/native';
 import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import AppButton from '../components/AppButton';
+import routes from '../navigation/routes';
 
 const backround = require('../assets/background.jpg');
 const logo = require('../assets/logo-red.png');
 
 export default function WelcomeScreen() {
+  const navigation = useNavigation();
   return (
     <ImageBackground source={backround} style={styles.backround} blurRadius={7}>
       <View style={styles.logoContainer}>
@@ -12,8 +15,15 @@ export default function WelcomeScreen() {
         <Text style={styles.tagLine}>Sell What You Don't Need</Text>
       </View>
       <View style={styles.buttonsContainer}>
-        <AppButton title={'login'} />
-        <AppButton title={'register'} color="secondary" />
+        <AppButton
+          title={'login'}
+          onPress={() => navigation.navigate(routes.LOGIN)}
+        />
+        <AppButton
+          title={'register'}
+          color="secondary"
+          onPress={() => navigation.navigate(routes.REGISTER)}
+        />
       </View>
     </ImageBackground>
   );
