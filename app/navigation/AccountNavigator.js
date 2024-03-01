@@ -12,7 +12,7 @@ export default function AccountNavigator() {
       }}
     >
       <Stack.Screen
-        name="Account"
+        name="AccountPage"
         component={AccountScreen}
         options={{ headerShown: false }}
       />

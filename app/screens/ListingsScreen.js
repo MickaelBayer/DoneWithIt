@@ -23,34 +23,37 @@ export default function ListingsScreen({ navigation }) {
   }, []);
 
   return (
-    <Screen style={styles.screen}>
-      {error ? (
-        <View style={styles.error}>
-          <AppText>Could not retrieve the listings.</AppText>
-          <AppButton title="Retry" onPress={loadListings} />
-        </View>
-      ) : (
-        <>
-          <AppActivityIndicator visible={loading} />
-          <FlatList
-            data={listings}
-            keyExtractor={(listing) => listing.id.toString()}
-            renderItem={({ item }) => (
-              <AppCard
-                title={item.title}
-                subtitle={'$' + item.price}
-                imageUrl={item.images[0].url}
-                onPress={() =>
-                  navigation.navigate(routes.LISTING_DETAILS, item)
-                }
-              />
-            )}
-            refreshing={loading}
-            onRefresh={() => loadListings()}
-          />
-        </>
-      )}
-    </Screen>
+    <>
+      <AppActivityIndicator visible={loading} />
+      <Screen style={styles.screen}>
+        {error ? (
+          <View style={styles.error}>
+            <AppText>Could not retrieve the listings.</AppText>
+            <AppButton title="Retry" onPress={loadListings} />
+          </View>
+        ) : (
+          <>
+            <FlatList
+              data={listings}
+              keyExtractor={(listing) => listing.id.toString()}
+              renderItem={({ item }) => (
+                <AppCard
+                  title={item.title}
+                  subtitle={'$' + item.price}
+                  imageUrl={item.images[0].url}
+                  onPress={() =>
+                    navigation.navigate(routes.LISTING_DETAILS, item)
+                  }
+                  thumbnailUrl={item.images[0].thumbnailUrl}
+                />
+              )}
+              refreshing={loading}
+              onRefresh={() => loadListings()}
+            />
+          </>
+        )}
+      </Screen>
+    </>
   );
 }
 

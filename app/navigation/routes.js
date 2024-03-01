@@ -4,5 +4,5 @@ export default Object.freeze({
   LISTING_EDIT: 'Listing Edit',
   LOGIN: 'Login',
   MESSAGES: 'Messages',
-  REGISTER: 'register'
+  REGISTER: 'Register'
 });
